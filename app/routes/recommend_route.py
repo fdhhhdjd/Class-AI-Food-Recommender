@@ -1,26 +1,28 @@
-from fastapi import APIRouter, HTTPException
-from typing import List
-from app.models.item import RecommendRequest
-from app.controllers.recommend_controller import recommend, precompute
-from app.services.embed_service import precompute_and_cache
+from fastapi import APIRouter
 from app.utils.io import load_items
+from app.controllers.recommend_controller import recommend, precompute
 
-router = APIRouter(prefix="/api", tags=["recommend"])
+# ⚠️ Không có prefix ở đây!
+router = APIRouter(tags=["Recommend"])
 
 @router.get("/items")
 def api_items():
     return load_items()
 
+@router.post("/recommend")
+def api_recommend(data: dict):
+    try:
+        history = data.get("history", [])
+        top = data.get("top", 3)
+        use_cache = data.get("use_cache", True)
+        category_boost = float(data.get("category_boost", 1.0))
+        pair_boost = float(data.get("pair_boost", 0.15))
+        res = recommend(history, top, use_cache, category_boost, pair_boost)
+        return {"results": res}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @router.post("/precompute")
 def api_precompute():
-    items = load_items()
-    out = precompute_and_cache(items)
-    return {"ok": True, "count": len(out)}
-
-@router.post("/recommend")
-def api_recommend(req: RecommendRequest):
-    try:
-        res = recommend(history_ids=req.history, top=req.top, use_cache=req.use_cache)
-        return {"results": [r.dict() for r in res]}
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    count = precompute()
+    return {"ok": True, "count": count}

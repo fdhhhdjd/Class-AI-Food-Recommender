@@ -1,304 +1,314 @@
-    <!doctype html>
-    <html lang="vi">
-    <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Demo Recommendation - Food & Drinks</title>
-    <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#9ca3af;--glass: rgba(255,255,255,0.03)}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#071126 0%, #07192a 100%);color:#e6eef6;margin:0;padding:24px}
-    .container{max-width:1100px;margin:0 auto}
-    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:1fr 420px;gap:20px}
-    .card{background:var(--card);padding:16px;border-radius:10px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
-    .items{max-height:540px;overflow:auto;padding-right:8px}
-    .item{display:flex;justify-content:space-between;padding:8px;border-radius:8px;align-items:center}
-    .item + .item{border-top:1px dashed rgba(255,255,255,0.03)}
-    .name{font-weight:600}
-    .desc{color:var(--muted);font-size:13px;margin-top:4px}
-    .controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-    button{background:var(--accent);border:0;padding:8px 12px;border-radius:8px;color:#02131a;font-weight:700;cursor:pointer}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-    .right{position:sticky;top:24px}
-    .result-list{margin-top:12px}
-    .result{padding:12px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));margin-bottom:8px}
-    .score{font-weight:700;color:var(--accent);float:right}
-    .small{font-size:13px;color:var(--muted)}
-    footer{margin-top:18px;color:var(--muted);font-size:13px}
-    input[type="search"]{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:var(--glass);color:inherit}
-    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-    .tag{background:rgba(255,255,255,0.03);padding:4px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
-    </style>
-    </head>
-    <body>
-    <div class="container">
-        <header>
-        <div>
-            <h1>Demo Recommendation — Food & Drinks</h1>
-            <p class="lead">Chọn lịch sử đặt món (bên trái) → bấm <strong>Recommend</strong> (bên phải). Mô phỏng TF-IDF + cosine.</p>
-        </div>
-        </header>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Gợi ý món ăn — Kiosk</title>
+  <style>
+    :root{
+      --accent:#007aff;
+      --muted:#6b7280;
+      --bg:#f3f6fb;
+      --card:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg); color:#111;
+    }
+    header{
+      background:linear-gradient(90deg,var(--accent),#00c6ff); color:white;
+      padding:18px 24px; text-align:center; font-weight:700; font-size:1.25rem;
+    }
+    main{max-width:1100px; margin:22px auto; padding:18px;}
+    .kiosk{
+      display:grid; grid-template-columns: 1fr 420px; gap:18px;
+    }
+    /* left area: product grid */
+    .panel{background:var(--card); border-radius:12px; padding:16px; box-shadow:0 6px 20px rgba(16,24,40,0.06);}
+    .panel h3{margin:0 0 12px 0}
+    .grid{
+      display:grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap:12px;
+    }
+    .product{
+      border-radius:10px; overflow:hidden; background:#fff; border:1px solid #eef2f7; cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease;
+      display:flex; flex-direction:column; height:100%;
+    }
+    .product:hover{transform:translateY(-4px); box-shadow:0 10px 30px rgba(2,6,23,0.08);}
+    .product.selected{outline:3px solid rgba(0,122,255,0.12); box-shadow:0 10px 30px rgba(2,6,23,0.12);}
+    .product img{width:100%; height:110px; object-fit:cover; display:block;}
+    .product .info{padding:10px; display:flex; flex-direction:column; gap:6px; flex:1}
+    .product .title{font-weight:600; font-size:0.98rem}
+    .product .meta{font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center}
+    .badge{background:#eef6ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:0.75rem}
+    /* right area: cart + controls + results */
+    .side{display:flex; flex-direction:column; gap:12px}
+    .controls{display:flex; gap:8px; align-items:center}
+    .select{padding:8px 12px; border-radius:8px; border:1px solid #e6eefc; background:#f9fbff}
+    .btn{
+      background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600;
+      box-shadow:0 6px 18px rgba(0,122,255,0.14)
+    }
+    .btn.secondary{background:#fff; color:var(--accent); border:1px solid #e6eefc}
+    .cart{padding:12px; border-radius:10px; background:#fbfdff; border:1px solid #eef5ff}
+    .cart h4{margin:0 0 8px 0}
+    .picked{display:flex; gap:8px; flex-wrap:wrap}
+    .picked .p{display:flex; gap:8px; align-items:center; padding:6px 8px; background:#fff; border-radius:8px; border:1px solid #eee}
+    .picked img{width:40px; height:28px; object-fit:cover; border-radius:6px}
+    .results{padding:12px; border-radius:10px; background:#fff; border:1px solid #eef2f7; max-height:420px; overflow:auto;}
+    .result-item{display:flex; gap:12px; padding:10px; border-radius:8px; align-items:center; border-bottom:1px dashed #f1f5f9}
+    .result-item:last-child{border-bottom:none}
+    .ri-img{width:80px; height:64px; border-radius:8px; object-fit:cover; flex-shrink:0}
+    .ri-body{flex:1}
+    .ri-title{font-weight:700}
+    .ri-sub{font-size:0.85rem; color:var(--muted)}
+    .tag{display:inline-block;padding:6px 8px;border-radius:6px;background:#fff7ef;color:#d97706;border:1px solid #fff0e6;font-size:0.78rem;margin-left:8px}
+    footer{margin-top:18px;text-align:center;color:#6b7280;font-size:0.9rem}
+    @media (max-width:980px){
+      .kiosk{grid-template-columns:1fr; padding-bottom:20px}
+      .side{order:2}
+    }
+    /* nút xoá trong giỏ */
+    .p .remove-btn{
+    margin-left:8px;
+    background:#ff4d4f;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    padding:4px 8px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:0.85rem;
+    }
+.p .remove-btn:hover{opacity:0.9}
 
-        <div class="grid">
-        <div class="card">
+  </style>
+</head>
+<body>
+  <header>🍽️ AI Gợi ý món ăn — Code Web Không Khó</header>
+  <main>
+    <div class="kiosk">
+      <div class="panel">
+        <h3>Chọn món (chạm / click để chọn)</h3>
+        <div id="dishContainer" class="grid">Đang tải...</div>
+      </div>
+
+      <div class="side">
+        <div class="panel cart">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h4>Giỏ chọn</h4>
             <div style="display:flex;gap:8px;align-items:center">
-            <input id="search" type="search" placeholder="Tìm món / đồ uống..." />
-            <button id="btnSelectAll" class="ghost">Chọn tất cả</button>
-            <button id="btnClear" class="ghost">Bỏ chọn</button>
+              <select id="topN" class="select"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select>
+              <button id="recommendBtn" class="btn">Gợi ý</button>
             </div>
+          </div>
 
-            <div class="items" id="itemsList" style="margin-top:12px"></div>
-
-            <div style="margin-top:10px" class="small">* Chọn vài món người dùng đã đặt để tạo profile.</div>
+          <div style="margin-top:8px" class="picked" id="pickedList">
+            <div style="color:var(--muted)">Chưa có món nào được chọn.</div>
+          </div>
+          <div style="margin-top:10px;color:var(--muted);font-size:0.9rem">
+            Bạn có thể chọn nhiều món để hệ thống hiểu khẩu vị chung.
+          </div>
         </div>
 
-        <div class="card right">
-            <div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-                <div>
-                <strong>Profile</strong><div class="small" id="selectedCount">0 món đã chọn</div>
-                </div>
-                <div>
-                <label class="small" style="margin-right:8px">Top</label>
-                <select id="topN"><option>3</option><option>5</option><option>7</option></select>
-                </div>
-            </div>
-
-            <div class="tags" id="selectedTags" style="margin-top:10px"></div>
-
-            <div class="controls">
-                <button id="btnRecommend">Recommend</button>
-                <button id="btnExport" class="ghost">Export CSV</button>
-            </div>
-
-            <div class="result-list" id="results"></div>
-
-            <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin-top:14px"/>
-
-            <div class="small">Ghi chú: đây là demo offline (TF-IDF). Để dùng embedding thực (Hugging Face) → tính embedding server-side rồi trả vectors cho frontend.</div>
-            </div>
-        </div>
+        <div class="panel results" id="resultsBox">
+          <h4 style="margin-top:0">Kết quả gợi ý</h4>
+          <div id="resultList">Chưa có kết quả.</div>
         </div>
 
-        <footer>
-        <div style="margin-top:10px">Muốn mình chuyển demo này để gọi API Hugging Face (server-side) và dùng embedding thật không? Mình làm luôn.</div>
-        </footer>
+        <div style="display:flex;gap:8px">
+          <button id="precomputeBtn" class="btn secondary">Precompute (build cache)</button>
+          <button id="clearCacheBtn" class="btn secondary">Xóa cache</button>
+        </div>
+      </div>
     </div>
 
-    <script>
-    /* ========== Dữ liệu (embedded) ========== */
-    /* Dán JSON items ở trên vào biến ITEMS */
-    const ITEMS = [
-    {"id":1,"name":"Phở bò","desc":"Phở nước dùng xương bò, bánh phở mềm, thịt bò tái chín, hành lá, rau thơm.","category":"food","tags":["nước","bò"],"price":45000},
-    {"id":2,"name":"Bún chả","desc":"Thịt heo nướng than, bún tươi, nước mắm chua ngọt, rau sống, đu đủ muối.","category":"food","tags":["nướng","heo"],"price":60000},
-    {"id":3,"name":"Cơm tấm sườn bì chả","desc":"Cơm tấm, sườn nướng, bì trộn, chả trứng, mỡ hành.","category":"food","tags":["cơm","nướng"],"price":55000},
-    {"id":4,"name":"Bún bò Huế","desc":"Bún sợi to, nước dùng cay, sả, giò heo, vị đậm đặc đặc trưng Huế.","category":"food","tags":["cay","bò"],"price":50000},
-    {"id":5,"name":"Gỏi cuốn","desc":"Cuốn tôm thịt với bún, rau sống, bánh tráng mỏng, chấm nước mắm/ tương đậu.","category":"food","tags":["cuốn","nhẹ"],"price":35000},
-    {"id":6,"name":"Mì Quảng","desc":"Mì bản to, nước dùng ít, tôm, thịt, đậu phộng, rau sống, bánh tráng.","category":"food","tags":["mì","nguội"],"price":45000},
-    {"id":7,"name":"Cơm gà Hội An","desc":"Cơm nghệ, thịt gà xé, nước mắm gừng, dưa leo, rau răm.","category":"food","tags":["cơm","gà"],"price":60000},
-    {"id":8,"name":"Hủ tiếu Nam Vang","desc":"Nước dùng trong, tôm, thịt, gan, hủ tiếu dai, hành lá.","category":"food","tags":["nước","hải sản"],"price":50000},
-    {"id":9,"name":"Bánh mì thịt","desc":"Bánh mì giòn, pate, thịt nguội, chả, rau, ớt, đồ chua.","category":"food","tags":["ăn nhanh"],"price":25000},
-    {"id":10,"name":"Cao lầu","desc":"Mì đặc sản Hội An, nước dùng ít, thịt xá xíu, rau thơm, giòn bánh tráng.","category":"food","tags":["mì","đặc sản"],"price":70000},
-    {"id":11,"name":"Chả cá Lã Vọng","desc":"Cá tẩm gia vị, chiên vàng, ăn kèm bún, thì là, lạc rang, nước chấm.","category":"food","tags":["cá","Hà Nội"],"price":80000},
-    {"id":12,"name":"Bánh cuốn","desc":"Bánh cuốn mỏng, nhân thịt & mộc nhĩ, hành phi, chấm nước mắm.","category":"food","tags":["nhẹ","bánh"],"price":30000},
-    {"id":13,"name":"Lẩu Thái","desc":"Nồi lẩu chua cay kiểu Thái, hải sản/giò heo, nấm, rau, bún.","category":"food","tags":["lẩu","cay"],"price":220000},
-    {"id":14,"name":"Sườn nướng BBQ","desc":"Sườn heo tẩm ướp BBQ, nướng than, sốt mật ong, salad kèm.","category":"food","tags":["nướng","bbq"],"price":120000},
-    {"id":15,"name":"Nem nướng","desc":"Nem nướng thơm, cuốn bánh tráng, rau sống, bún và nước chấm đặc trưng.","category":"food","tags":["nướng","quê"],"price":65000},
-    {"id":16,"name":"Phở gà","desc":"Phở nước dùng từ xương gà, thịt gà xé, hành ngò, chanh và tiêu.","category":"food","tags":["nước","gà"],"price":40000},
-    {"id":17,"name":"Bánh xèo","desc":"Bánh xèo giòn, nhân tôm/thịt, giá đỗ, ăn kèm rau sống và nước mắm.","category":"food","tags":["chiên","miền Nam"],"price":50000},
-    {"id":18,"name":"Cơm rang dưa bò","desc":"Cơm rang với dưa chua và thịt bò mềm, hành lá, trứng.","category":"food","tags":["cơm","rang"],"price":55000},
-    {"id":19,"name":"Mì vịt tiềm","desc":"Mì sợi ăn với vịt tiềm thuốc bắc, nước dùng đậm vị, hành thơm.","category":"food","tags":["vịt","mì"],"price":90000},
-    {"id":20,"name":"Bánh đa cua","desc":"Bánh đa ăn với cua, nước dùng đậm đà, rau thơm.","category":"food","tags":["hải sản","bắc"],"price":70000},
-    {"id":21,"name":"Trà đá","desc":"Trà xanh ướp, phục vụ lạnh, thức uống giải khát phổ biến.","category":"drink","tags":["trà","nước"],"price":5000},
-    {"id":22,"name":"Trà chanh","desc":"Chanh tươi, đường, đá; vị chua ngọt mát.","category":"drink","tags":["chua","giải khát"],"price":10000},
-    {"id":23,"name":"Trà sữa trân châu","desc":"Trà sữa kem, trân châu dai, vị ngọt thơm.","category":"drink","tags":["ngọt","bubble"],"price":30000},
-    {"id":24,"name":"Cà phê sữa đá","desc":"Cà phê phin, sữa đặc, đá; vị đắng pha ngọt.","category":"drink","tags":["cà phê","đậm"],"price":20000},
-    {"id":25,"name":"Sinh tố bơ","desc":"Bơ xay với sữa/đường, mịn, béo.","category":"drink","tags":["sinh tố","ngon"],"price":35000},
-    {"id":26,"name":"Nước mía","desc":"Ép tươi, thêm đá và chanh tùy chọn, ngọt mát.","category":"drink","tags":["tươi","đường"],"price":15000},
-    {"id":27,"name":"Soda chanh","desc":"Soda + chanh tươi, giải nhiệt, hơi có ga.","category":"drink","tags":["có ga","chua"],"price":18000},
-    {"id":28,"name":"Nước cam vắt","desc":"Cam tươi ép, giàu vitamin C, không đường (có thể thêm đường).","category":"drink","tags":["tươi","vitamin"],"price":25000},
-    {"id":29,"name":"Sữa đậu nành","desc":"Sữa đậu nành tươi, mát, thường dùng sáng/đêm.","category":"drink","tags":["đậu nành","bổ"],"price":12000},
-    {"id":30,"name":"Nước khoáng","desc":"Nước khoáng đóng chai, phù hợp kèm đồ ăn.","category":"drink","tags":["không vị"],"price":8000}
-    ];
+    <footer>© 2025 — AI Recommend • Code Web Không Khó</footer>
+  </main>
 
-    /* ========== Tiny TF-IDF vectorizer (client-side) ========== */
-    /* tokenize simple: lowercase, remove punctuation, split spaces, remove short words */
-    function tokenize(s) {
-    return s.toLowerCase()
-        .replace(/[^\w\sđ]/g,' ')
-        .split(/\s+/)
-        .map(t=>t.trim())
-        .filter(t=>t.length>1);
+  <script>
+    const API_BASE = "http://127.0.0.1:8000/api";
+    const dishContainer = document.getElementById("dishContainer");
+    const pickedList = document.getElementById("pickedList");
+    const recommendBtn = document.getElementById("recommendBtn");
+    const resultList = document.getElementById("resultList");
+    const topSelect = document.getElementById("topN");
+    const precomputeBtn = document.getElementById("precomputeBtn");
+    const clearCacheBtn = document.getElementById("clearCacheBtn");
+
+    let dishes = [];
+    const selected = new Set();
+
+    async function loadItems(){
+      dishContainer.innerHTML = "Đang tải...";
+      try{
+        const res = await fetch(`${API_BASE}/items`);
+        if(!res.ok) throw new Error("Không thể tải items");
+        dishes = await res.json();
+        renderGrid();
+      } catch(e){
+        dishContainer.innerHTML = `<div style="color:#ef4444">Lỗi: ${e.message}</div>`;
+      }
     }
 
-    function buildTfIdf(docs) {
-    const docsTok = docs.map(d => tokenize(d));
-    const df = {};
-    docsTok.forEach(tokens => {
-        const seen = new Set();
-        tokens.forEach(t => {
-        if (!seen.has(t)) { df[t] = (df[t]||0)+1; seen.add(t); }
-        });
-    });
-    const idf = {};
-    const N = docsTok.length;
-    for (const t in df) idf[t] = Math.log(1 + N / df[t]);
-
-    const vecs = docsTok.map(tokens => {
-        const tf = {};
-        tokens.forEach(t => tf[t] = (tf[t]||0)+1);
-        // tf-idf vector represented as dict {term: value}
-        const vec = {};
-        for (const t in tf) vec[t] = tf[t] * idf[t];
-        return vec;
-    });
-    return {vecs, idf};
-    }
-
-    function dotSparse(a,b){
-    let s=0;
-    for (const k in a) if (b[k]) s += a[k]*b[k];
-    return s;
-    }
-    function normSparse(a){
-    let s=0;
-    for (const k in a) s += a[k]*a[k];
-    return Math.sqrt(s);
-    }
-    function cosineSparse(a,b){
-    const denom = (normSparse(a)*normSparse(b)) + 1e-12;
-    return dotSparse(a,b)/denom;
-    }
-
-    /* ========== App logic ========== */
-    const items = ITEMS;
-    let selected = new Set();
-
-    const itemsList = document.getElementById('itemsList');
-    const searchInput = document.getElementById('search');
-    const selectedCount = document.getElementById('selectedCount');
-    const selectedTags = document.getElementById('selectedTags');
-    const resultsDiv = document.getElementById('results');
-    const topNSelect = document.getElementById('topN');
-
-    function renderItems(filter="") {
-    itemsList.innerHTML = '';
-    const q = filter.trim().toLowerCase();
-    items.filter(it => it.name.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q) || it.tags.join(' ').includes(q))
-        .forEach(it => {
-        const el = document.createElement('div');
-        el.className = 'item';
+    function renderGrid(){
+      dishContainer.innerHTML = "";
+      dishes.forEach(d => {
+        const el = document.createElement("div");
+        el.className = "product";
+        el.dataset.id = d.id;
         el.innerHTML = `
-            <div>
-            <div class="name">${it.name}</div>
-            <div class="desc">${it.desc}</div>
+          <img src="${d.img || 'https://picsum.photos/seed/' + d.id + '/400/300'}" alt="${escapeHtml(d.name)}" loading="lazy">
+          <div class="info">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="title">${escapeHtml(d.name)}</div>
+              <div class="badge">${d.category}</div>
             </div>
-            <div style="text-align:right">
-            <div class="small">${it.category} • ${it.price.toLocaleString()}₫</div>
-            <div style="margin-top:8px">
-                <input type="checkbox" data-id="${it.id}" ${selected.has(it.id)?'checked':''}/>
-            </div>
-            </div>
+            <div class="meta"><div style="color:#111;font-weight:700">${formatPrice(d.price)}</div><div style="font-size:0.8rem;color:#64748b">ID:${d.id}</div></div>
+          </div>
         `;
-        itemsList.appendChild(el);
+        el.onclick = () => toggleSelect(d.id, el);
+        dishContainer.appendChild(el);
+      });
+    }
+
+    function toggleSelect(id, el){
+      if(selected.has(id)){
+        selected.delete(id);
+        el.classList.remove("selected");
+      } else {
+        selected.add(id);
+        el.classList.add("selected");
+      }
+      renderPicked();
+    }
+
+    function renderPicked(){
+        if(selected.size === 0){
+            pickedList.innerHTML = '<div style="color:var(--muted)">Chưa có món nào được chọn.</div>';
+            return;
+        }
+        pickedList.innerHTML = "";
+        Array.from(selected).forEach(id => {
+            const it = dishes.find(d => d.id === id);
+            if(!it) return;
+            const p = document.createElement("div");
+            p.className = "p";
+            // remove button
+            const removeBtn = `<button class="remove-btn" data-id="${it.id}" title="Xóa">✕</button>`;
+            p.innerHTML = `<img src="${it.img}" alt="${escapeHtml(it.name)}"><div style="min-width:120px">${escapeHtml(it.name)}<div style="font-size:0.82rem;color:var(--muted)">${formatPrice(it.price)}</div></div>${removeBtn}`;
+            // attach click for remove
+            p.querySelector(".remove-btn").addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            removeFromSelected(it.id);
+            });
+            pickedList.appendChild(p);
         });
-    // attach events
-    itemsList.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
-        cb.onchange = e => {
-        const id = +cb.dataset.id;
-        if (cb.checked) selected.add(id); else selected.delete(id);
-        updateProfileUI();
-        };
-    });
     }
 
-    function updateProfileUI(){
-    selectedCount.textContent = `${selected.size} món đã chọn`;
-    selectedTags.innerHTML = '';
-    // collect tags from selected
-    const tags = new Set();
-    [...selected].forEach(id=>{
-        const it = items.find(x=>x.id===id);
-        if (it) it.tags.forEach(t=>tags.add(t));
-    });
-    tags.forEach(t=>{
-        const s = document.createElement('div'); s.className='tag'; s.textContent = t; selectedTags.appendChild(s);
-    });
+
+    // call recommend
+    recommendBtn.onclick = async () => {
+      if(selected.size === 0){ alert("Chọn ít nhất 1 món!"); return; }
+      resultList.innerHTML = "<div style='color:var(--muted)'>⏳ Đang gợi ý...</div>";
+      const payload = { history: Array.from(selected), top: parseInt(topSelect.value), use_cache: true };
+      try{
+        const res = await fetch(`${API_BASE}/recommend`, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok){ const txt = await res.text(); throw new Error(txt || "API error"); }
+        const data = await res.json();
+        renderResults(data.results);
+      } catch(e){
+        resultList.innerHTML = `<div style="color:#ef4444">Lỗi: ${e.message}</div>`;
+      }
+    };
+
+    function renderResults(results){
+      if(!results || results.length === 0){ resultList.innerHTML = "<div style='color:var(--muted)'>Không có kết quả</div>"; return; }
+      resultList.innerHTML = "";
+      // Build map for quick pair check
+      const id2item = {}; dishes.forEach(d => id2item[d.id]=d);
+      // Collect declared pairs from selected history
+      const declared_pairs = new Set();
+      Array.from(selected).forEach(hid => {
+        const hist = id2item[hid];
+        if(hist && Array.isArray(hist.pair)) hist.pair.forEach(pid => declared_pairs.add(pid));
+      });
+
+      results.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "result-item";
+        const img = document.createElement("img");
+        img.src = (id2item[r.id] && id2item[r.id].img) ? id2item[r.id].img : ("https://picsum.photos/seed/" + r.id + "/200/160");
+        img.className = "ri-img";
+        const body = document.createElement("div");
+        body.className = "ri-body";
+        const title = document.createElement("div");
+        title.className = "ri-title";
+        title.textContent = r.name;
+        const sub = document.createElement("div");
+        sub.className = "ri-sub";
+        // badges
+        const badges = [];
+        if(declared_pairs.has(r.id)) badges.push('<span class="tag">Pair ✓</span>');
+        // same category?
+        const histCats = new Set(Array.from(selected).map(hid => (id2item[hid]||{}).category).filter(Boolean));
+        if(histCats.size>0 && histCats.has(r.category)) badges.push('<span class="tag" style="background:#e6f8ff;color:#0369a1;border-color:#e6f8ff">Same category</span>');
+
+        sub.innerHTML = `Độ tương đồng: <strong style="color:var(--accent)">${(r.score*100).toFixed(1)}%</strong> • ${r.category ? r.category : ''} ${badges.join(' ')}`;
+        body.appendChild(title);
+        body.appendChild(sub);
+        div.appendChild(img);
+        div.appendChild(body);
+        resultList.appendChild(div);
+      });
     }
 
-    document.getElementById('btnSelectAll').onclick = ()=>{
-    items.forEach(it=>selected.add(it.id));
-    renderItems(searchInput.value);
-    updateProfileUI();
-    };
-    document.getElementById('btnClear').onclick = ()=>{
-    selected = new Set();
-    renderItems(searchInput.value);
-    updateProfileUI();
-    };
-
-    searchInput.oninput = ()=> renderItems(searchInput.value);
-
-    /* Recommend */
-    document.getElementById('btnRecommend').onclick = ()=> {
-    if (selected.size===0) { alert('Vui lòng chọn tối thiểu 1 món trong lịch sử.'); return; }
-    const docs = items.map(it => (it.name + ' ' + it.desc));
-    const {vecs, idf} = buildTfIdf(docs);
-    // map id->vec
-    const idToVec = {};
-    items.forEach((it, idx)=> idToVec[it.id] = vecs[idx]);
-
-    const historyVecs = [...selected].map(id => idToVec[id]).filter(Boolean);
-    // average sparse vectors (term-wise)
-    const profile = {};
-    historyVecs.forEach(v=>{
-        for (const k in v) profile[k] = (profile[k]||0) + v[k];
-    });
-    for (const k in profile) profile[k] /= historyVecs.length;
-
-    // score candidates
-    const candidates = items.filter(it => !selected.has(it.id));
-    const scored = candidates.map(it => {
-        const v = idToVec[it.id];
-        return {name:it.name,desc:it.desc,score: cosineSparse(profile, v),price:it.price,category:it.category};
-    }).sort((a,b)=>b.score - a.score);
-
-    const topN = +topNSelect.value;
-    renderResults(scored.slice(0,topN));
+    // precompute and clear cache helpers
+    precomputeBtn.onclick = async () => {
+      precomputeBtn.disabled = true; precomputeBtn.textContent = "Đang build cache...";
+      try{
+        const res = await fetch(`${API_BASE}/precompute`, {method:"POST"});
+        const data = await res.json();
+        alert("Precompute xong: " + JSON.stringify(data));
+      } catch(e){
+        alert("Precompute lỗi: " + e.message);
+      } finally{ precomputeBtn.disabled=false; precomputeBtn.textContent="Precompute (build cache)"; }
     };
 
-    /* Export CSV of selected history */
-    document.getElementById('btnExport').onclick = ()=>{
-    if (selected.size===0) { alert('Chưa có món nào được chọn.'); return; }
-    const rows = [['id','name','desc','category','price']];
-    [...selected].forEach(id=>{
-        const it = items.find(x=>x.id===id);
-        if (it) rows.push([it.id, `"${it.name.replace(/"/g,'""')}"`, `"${it.desc.replace(/"/g,'""')}"`, it.category, it.price]);
-    });
-    const csv = rows.map(r => r.join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'history.csv'; a.click();
-    URL.revokeObjectURL(url);
+    clearCacheBtn.onclick = async () => {
+      if(!confirm("Xóa file cache (data/items_with_vecs.json)?")) return;
+      try{
+        const res = await fetch(`${API_BASE}/cache/clear`, {method:"DELETE"});
+        const data = await res.json();
+        alert("Cache cleared: " + JSON.stringify(data));
+      } catch(e){
+        alert("Xóa cache lỗi (server có thể chưa hỗ trợ endpoint): " + e.message);
+      }
     };
+    
 
-    function renderResults(list){
-    resultsDiv.innerHTML = '';
-    if (list.length===0) { resultsDiv.innerHTML = '<div class="small">Không tìm thấy gợi ý.</div>'; return; }
-    list.forEach(r=>{
-        const el = document.createElement('div'); el.className='result';
-        el.innerHTML = `<div><strong>${r.name}</strong> <span class="score">${(r.score||0).toFixed(3)}</span></div>
-        <div class="small">${r.desc}</div>
-        <div style="margin-top:6px" class="small">Category: ${r.category} • Giá: ${r.price.toLocaleString()}₫</div>`;
-        resultsDiv.appendChild(el);
-    });
+    function removeFromSelected(id){
+        if(selected.has(id)){
+            selected.delete(id);
+            // remove selected class from grid item
+            const node = dishContainer.querySelector(`.product[data-id="${id}"]`);
+            if(node) node.classList.remove("selected");
+            renderPicked();
+        }
     }
 
-    /* init */
-    renderItems();
-    updateProfileUI();
-    </script>
-    </body>
-    </html>
+
+    // util
+    function formatPrice(p){ return p ? p.toLocaleString('vi-VN') + " đ" : ""; }
+    function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // init
+    loadItems();
+  </script>
+</body>
+</html>

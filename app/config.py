@@ -5,7 +5,7 @@ from huggingface_hub import InferenceClient
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
 ITEMS_FILE = DATA_DIR / "items.json"
 CACHE_FILE = DATA_DIR / "items_with_vecs.json"

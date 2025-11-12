@@ -1,33 +1,110 @@
 [
-    {"id":1,"name":"Phở bò","desc":"Phở nước dùng xương bò, bánh phở mềm, thịt bò tái chín, hành lá, rau thơm.","category":"food","tags":["nước","bò"],"price":45000},
-    {"id":2,"name":"Bún chả","desc":"Thịt heo nướng than, bún tươi, nước mắm chua ngọt, rau sống, đu đủ muối.","category":"food","tags":["nướng","heo"],"price":60000},
-    {"id":3,"name":"Cơm tấm sườn bì chả","desc":"Cơm tấm, sườn nướng, bì trộn, chả trứng, mỡ hành.","category":"food","tags":["cơm","nướng"],"price":55000},
-    {"id":4,"name":"Bún bò Huế","desc":"Bún sợi to, nước dùng cay, sả, giò heo, vị đậm đặc đặc trưng Huế.","category":"food","tags":["cay","bò"],"price":50000},
-    {"id":5,"name":"Gỏi cuốn","desc":"Cuốn tôm thịt với bún, rau sống, bánh tráng mỏng, chấm nước mắm/ tương đậu.","category":"food","tags":["cuốn","nhẹ"],"price":35000},
-    {"id":6,"name":"Mì Quảng","desc":"Mì bản to, nước dùng ít, tôm, thịt, đậu phộng, rau sống, bánh tráng.","category":"food","tags":["mì","nguội"],"price":45000},
-    {"id":7,"name":"Cơm gà Hội An","desc":"Cơm nghệ, thịt gà xé, nước mắm gừng, dưa leo, rau răm.","category":"food","tags":["cơm","gà"],"price":60000},
-    {"id":8,"name":"Hủ tiếu Nam Vang","desc":"Nước dùng trong, tôm, thịt, gan, hủ tiếu dai, hành lá.","category":"food","tags":["nước","hải sản"],"price":50000},
-    {"id":9,"name":"Bánh mì thịt","desc":"Bánh mì giòn, pate, thịt nguội, chả, rau, ớt, đồ chua.","category":"food","tags":["ăn nhanh"],"price":25000},
-    {"id":10,"name":"Cao lầu","desc":"Mì đặc sản Hội An, nước dùng ít, thịt xá xíu, rau thơm, giòn bánh tráng.","category":"food","tags":["mì","đặc sản"],"price":70000},
-    {"id":11,"name":"Chả cá Lã Vọng","desc":"Cá tẩm gia vị, chiên vàng, ăn kèm bún, thì là, lạc rang, nước chấm.","category":"food","tags":["cá","Hà Nội"],"price":80000},
-    {"id":12,"name":"Bánh cuốn","desc":"Bánh cuốn mỏng, nhân thịt & mộc nhĩ, hành phi, chấm nước mắm.","category":"food","tags":["nhẹ","bánh"],"price":30000},
-    {"id":13,"name":"Lẩu Thái","desc":"Nồi lẩu chua cay kiểu Thái, hải sản/giò heo, nấm, rau, bún.","category":"food","tags":["lẩu","cay"],"price":220000},
-    {"id":14,"name":"Sườn nướng BBQ","desc":"Sườn heo tẩm ướp BBQ, nướng than, sốt mật ong, salad kèm.","category":"food","tags":["nướng","bbq"],"price":120000},
-    {"id":15,"name":"Nem nướng","desc":"Nem nướng thơm, cuốn bánh tráng, rau sống, bún và nước chấm đặc trưng.","category":"food","tags":["nướng","quê"],"price":65000},
-    {"id":16,"name":"Phở gà","desc":"Phở nước dùng từ xương gà, thịt gà xé, hành ngò, chanh và tiêu.","category":"food","tags":["nước","gà"],"price":40000},
-    {"id":17,"name":"Bánh xèo","desc":"Bánh xèo giòn, nhân tôm/thịt, giá đỗ, ăn kèm rau sống và nước mắm.","category":"food","tags":["chiên","miền Nam"],"price":50000},
-    {"id":18,"name":"Cơm rang dưa bò","desc":"Cơm rang với dưa chua và thịt bò mềm, hành lá, trứng.","category":"food","tags":["cơm","rang"],"price":55000},
-    {"id":19,"name":"Mì vịt tiềm","desc":"Mì sợi ăn với vịt tiềm thuốc bắc, nước dùng đậm vị, hành thơm.","category":"food","tags":["vịt","mì"],"price":90000},
-    {"id":20,"name":"Bánh đa cua","desc":"Bánh đa ăn với cua, nước dùng đậm đà, rau thơm.","category":"food","tags":["hải sản","bắc"],"price":70000},
-    {"id":21,"name":"Trà đá","desc":"Trà xanh ướp, phục vụ lạnh, thức uống giải khát phổ biến.","category":"drink","tags":["trà","nước"],"price":5000},
-    {"id":22,"name":"Trà chanh","desc":"Chanh tươi, đường, đá; vị chua ngọt mát.","category":"drink","tags":["chua","giải khát"],"price":10000},
-    {"id":23,"name":"Trà sữa trân châu","desc":"Trà sữa kem, trân châu dai, vị ngọt thơm.","category":"drink","tags":["ngọt","bubble"],"price":30000},
-    {"id":24,"name":"Cà phê sữa đá","desc":"Cà phê phin, sữa đặc, đá; vị đắng pha ngọt.","category":"drink","tags":["cà phê","đậm"],"price":20000},
-    {"id":25,"name":"Sinh tố bơ","desc":"Bơ xay với sữa/đường, mịn, béo.","category":"drink","tags":["sinh tố","ngon"],"price":35000},
-    {"id":26,"name":"Nước mía","desc":"Ép tươi, thêm đá và chanh tùy chọn, ngọt mát.","category":"drink","tags":["tươi","đường"],"price":15000},
-    {"id":27,"name":"Soda chanh","desc":"Soda + chanh tươi, giải nhiệt, hơi có ga.","category":"drink","tags":["có ga","chua"],"price":18000},
-    {"id":28,"name":"Nước cam vắt","desc":"Cam tươi ép, giàu vitamin C, không đường (có thể thêm đường).","category":"drink","tags":["tươi","vitamin"],"price":25000},
-    {"id":29,"name":"Sữa đậu nành","desc":"Sữa đậu nành tươi, mát, thường dùng sáng/đêm.","category":"drink","tags":["đậu nành","bổ"],"price":12000},
-    {"id":30,"name":"Nước khoáng","desc":"Nước khoáng đóng chai, phù hợp kèm đồ ăn.","category":"drink","tags":["không vị"],"price":8000}
-  ]
-  
+  {
+    "id": 1,
+    "name": "Gà rán truyền thống",
+    "desc": "Miếng gà rán vàng giòn, vị mặn vừa, lớp vỏ giòn rụm, ăn kèm tương ớt hoặc tương cà.",
+    "category": "food",
+    "price": 45000,
+    "pair": [7, 8],
+    "img": "https://png.pngtree.com/png-vector/20241210/ourlarge/pngtree-crispy-fried-chicken-drumsticks-in-a-box-for-fast-food-png-image_14654674.png"
+  },
+  {
+    "id": 2,
+    "name": "Gà cay Hàn Quốc",
+    "desc": "Gà rán phủ sốt cay ngọt kiểu Hàn, vị đậm đà, hợp với cơm hoặc khoai tây chiên.",
+    "category": "food",
+    "price": 52000,
+    "pair": [8, 9],
+    "img": "https://i.vietgiaitri.com/2021/7/23/ga-vien-sot-cay-ngot-kieu-han-a19-5907580.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Khoai tây chiên",
+    "desc": "Khoai tây chiên vàng giòn, muối nhẹ, ăn kèm tương cà hoặc tương ớt.",
+    "category": "food",
+    "price": 25000,
+    "pair": [1, 7, 8],
+    "img": "https://vietnhatplastic.com/Data/Sites/1/media/a/ca%CC%81ch-la%CC%80m-khoai-t%C3%A2y-chi%C3%AAn/cach-lam-khoai-tay-chien-gion-5.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Burger bò phô mai",
+    "desc": "Bánh burger kẹp bò nướng, phô mai tan chảy, rau tươi, sốt mayonnaise và cà chua.",
+    "category": "food",
+    "price": 65000,
+    "pair": [7, 8, 10],
+    "img": "https://burgerking.vn/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/d/o/double_cheese_burger_1.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Burger gà giòn",
+    "desc": "Burger kẹp gà chiên giòn, rau xà lách, cà chua, sốt mayonnaise béo ngậy.",
+    "category": "food",
+    "price": 60000,
+    "pair": [7, 8],
+    "img": "https://jollibee.com.vn/media/catalog/product/cache/587a88463e7f7db34b08e43646e795a0/b/u/burger_-_8.png"
+  },
+  {
+    "id": 6,
+    "name": "Cơm gà xối mỡ",
+    "desc": "Cơm vàng giòn, gà chiên rưới mỡ hành, nước mắm chua ngọt đặc trưng.",
+    "category": "food",
+    "price": 55000,
+    "pair": [9, 8],
+    "img": "https://cdn.tgdd.vn/2022/01/CookDish/cach-lam-com-ga-chien-xoi-mo-ngon-da-vang-gion-rum-dom-gian-avt-1200x676.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Coca-Cola",
+    "desc": "Nước ngọt có gas, vị ngọt và hơi cay nhẹ, dùng lạnh, giải khát khi ăn đồ chiên hoặc burger.",
+    "category": "drink",
+    "price": 15000,
+    "pair": [1, 3, 4, 5],
+    "img": "https://product.hstatic.net/200000534989/product/dsc08341-enhanced-nr_1_e6d5d0a13c8f42c2bd7cea59e03ce199_master.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Pepsi",
+    "desc": "Nước ngọt có gas, vị đậm hơn Coca, hợp khi ăn gà rán, burger hoặc khoai tây chiên.",
+    "category": "drink",
+    "price": 15000,
+    "pair": [1, 2, 5, 6],
+    "img": "https://bizweb.dktcdn.net/100/514/431/products/nuoc-ngot-pepsi-cola-lon-320ml-202403091730333958.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Trà chanh",
+    "desc": "Nước trà pha chanh, vị thanh, giải ngấy, hợp khi ăn đồ chiên cay.",
+    "category": "drink",
+    "price": 12000,
+    "pair": [2, 6, 10],
+    "img": "https://cdn.tgdd.vn/2021/05/CookProduct/thum-1200x676-16.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Kem vani",
+    "desc": "Kem vị vani ngọt dịu, ăn tráng miệng sau burger hoặc gà rán.",
+    "category": "dessert",
+    "price": 25000,
+    "pair": [4, 5],
+    "img": "https://vuakem.com/images/icecream-vuakem.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Kem socola",
+    "desc": "Kem vị socola đậm, hợp khi ăn burger hoặc pizza.",
+    "category": "dessert",
+    "price": 25000,
+    "pair": [4, 12],
+    "img": "https://jollibee.com.vn/media/catalog/product/cache/11f3e6435b23ab624dc55c2d3fe9479d/m/_/m_n_tr_ng_mi_ng_-_5.png"
+  },
+  {
+    "id": 12,
+    "name": "Pizza hải sản",
+    "desc": "Đế bánh pizza giòn, topping tôm, mực, phô mai, sốt cà chua đậm vị.",
+    "category": "food",
+    "price": 90000,
+    "pair": [7, 11],
+    "img": "http://thepizzacompany.vn/images/thumbs/000/0002214_sf-deluxe_500.png"
+  }
+]
