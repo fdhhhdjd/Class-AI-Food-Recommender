@@ -1,0 +1,54 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual environment
+# =========================
+.venv/
+env/
+venv/
+ENV/
+
+# =========================
+# Environment & secrets
+# =========================
+.env
+.env.*
+!.env.example  # keep template
+
+# =========================
+# Logs & cache
+# =========================
+*.log
+*.pid
+*.out
+*.tmp
+*.bak
+.cache/
+.pytest_cache/
+.mypy_cache/
+coverage/
+.coverage
+htmlcov/
+
+# =========================
+# OS & IDE
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# =========================
+# Data & generated files
+# =========================
+data/items_with_vecs.json
+data/*.csv
+data/*.sqlite3
+uploads/
+outputs/
